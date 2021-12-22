@@ -82,14 +82,18 @@ function setup() {
   magThreshSlider.style('width', '160px');
   magThreshSlider.mouseClicked(getMagThreshSliderValue);
 
+  calculatingStatusP = createP('No calculation yet');
+  calculatingStatusP.style('font-size', '16px');
+  calculatingStatusP.position(CANVAS_WIDTH - 150, 40);
 
+  drawButton.mousePressed(calculateMandelbrot);
+  toggleGridButton.mousePressed(toggleGrid);
+  clearButton.mousePressed(clearScreen);
 }
 
 // p5.js animation loop
 function draw() {
-  drawButton.mousePressed(calculateMandelbrot);
-  toggleGridButton.mousePressed(toggleGrid);
-  clearButton.mousePressed(clearScreen);
+
 }	
 
 function getIterationsSliderValue() {
@@ -178,7 +182,7 @@ function calculateMandelbrot() {
         }
         if (k === iterationsSlider.value() - 1) {
           if (deltaIteration < magThreshSlider.value() / magThreshDivider) {
-            stroke(200, 0, 0);
+            stroke(0, 0, 0);
             point(i, j);
           }
           if (deltaIteration >= magThreshSlider.value() / magThreshDivider && deltaIteration < 10 * magThreshSlider.value() / magThreshDivider) {
@@ -195,6 +199,7 @@ function calculateMandelbrot() {
     }
   }
   console.log('Calculation done !');
+  calculatingStatusP.elt.innerText = 'Calculation done !';
 
   // SIMPLE EXAMPLE - WORKING
   // let reC = 0.3;
