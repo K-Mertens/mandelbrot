@@ -20,7 +20,10 @@ let imagC;
 let compCMag;
 let iterationsThreshMax = 30;
 let iterationsThreshDefault = 20;
-let magThresh = 0.1; // Default 0.0000001
+//let magThresh = 0.1; // Default 0.0000001
+let magThreshMax = 200;
+let magThreshDefault = 1;
+let magThreshDivider = 10000 // Since the slider can only accept ints
 let deltaIteration = 0;
 let compCMagPrevious = 0;
 let debugObj = [];
@@ -42,6 +45,8 @@ function setup() {
   canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   //canvas.parent('sketch-holder');
   background(60);
+
+  // DOM ELEMENTS
   drawButton = createButton('Draw');
   drawButton.position(CANVAS_WIDTH / 2, CANVAS_HEIGHT - (drawButton.height / 2));
 
@@ -51,11 +56,6 @@ function setup() {
   toggleGridButton = createButton('Grid');
   toggleGridButton.position(CANVAS_WIDTH / 2, CANVAS_HEIGHT + 50);
 
-  iterationsSlider = createSlider(1, iterationsThreshMax, iterationsThreshDefault);
-  iterationsSlider.position(20, 80);
-  iterationsSlider.style('width', '80px');
-  iterationsSlider.mouseClicked(getIterationsSliderValue);
-
   iterationsSliderP = createP('# of iter. for each C');
   iterationsSliderP.style('font-size', '16px');
   iterationsSliderP.position(20, 20);
@@ -63,6 +63,26 @@ function setup() {
   iterationsSliderValueP = createP(iterationsThreshDefault);
   iterationsSliderValueP.style('font-size', '16px');
   iterationsSliderValueP.position(20, 40);
+
+  iterationsSlider = createSlider(1, iterationsThreshMax, iterationsThreshDefault);
+  iterationsSlider.position(20, 80);
+  iterationsSlider.style('width', '160px');
+  iterationsSlider.mouseClicked(getIterationsSliderValue);
+
+  iterationsSliderP = createP('Mag. max to be in set');
+  iterationsSliderP.style('font-size', '16px');
+  iterationsSliderP.position(20, 100);
+
+  magThreshSliderValueP = createP(magThreshDefault / magThreshDivider);
+  magThreshSliderValueP.style('font-size', '16px');
+  magThreshSliderValueP.position(20, 120);
+
+  magThreshSlider = createSlider(1, magThreshMax, magThreshDefault);
+  magThreshSlider.position(20, 160);
+  magThreshSlider.style('width', '160px');
+  magThreshSlider.mouseClicked(getMagThreshSliderValue);
+
+
 }
 
 // p5.js animation loop
@@ -74,6 +94,10 @@ function draw() {
 
 function getIterationsSliderValue() {
   iterationsSliderValueP.elt.innerText = iterationsSlider.value();
+}
+
+function getMagThreshSliderValue() {
+  magThreshSliderValueP.elt.innerText = magThreshSlider.value() / magThreshDivider;
 }
 
 function toggleGrid() {
@@ -153,15 +177,15 @@ function calculateMandelbrot() {
           break;
         }
         if (k === iterationsSlider.value() - 1) {
-          if (deltaIteration < magThresh) {
+          if (deltaIteration < magThreshSlider.value() / magThreshDivider) {
             stroke(200, 0, 0);
             point(i, j);
           }
-          if (deltaIteration >= magThresh && deltaIteration < 10 * magThresh) {
+          if (deltaIteration >= magThreshSlider.value() / magThreshDivider && deltaIteration < 10 * magThreshSlider.value() / magThreshDivider) {
             stroke(0, 200, 0);
             point(i, j);
           }
-          if (deltaIteration >= 10 * magThresh && deltaIteration < 100 * magThresh) {
+          if (deltaIteration >= 10 * magThreshSlider.value() / magThreshDivider && deltaIteration < 100 * magThreshSlider.value() / magThreshDivider) {
             stroke(0, 0, 200);
             point(i, j);
           }
