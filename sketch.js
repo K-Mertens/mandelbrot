@@ -217,7 +217,7 @@ function calculateMandelbrot() {
         if (k === iterationsSlider.value() - 1 && magZ < 2) {
           if (deltaIteration < magThreshSlider.value() / magThreshDivider) {
             stroke(0, 0, 0);
-            //point(i, j);
+            point(i, j);
             mandelPixelPoints.push({x:i, y:j});
           }
           // if (deltaIteration >= magThreshSlider.value() / magThreshDivider && deltaIteration < 10 * magThreshSlider.value() / magThreshDivider) {
